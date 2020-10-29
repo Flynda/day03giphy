@@ -42,18 +42,27 @@ app.get('/search',
         )
         console.info('the url is:', url)
         
-        const result = await fetch(url)
-        const giphy = await result.json()
-        console.info(`result is: \n`, giphy)
+        try {
+            const result = await fetch(url)
+            const giphy = await result.json()
+            console.info(`result is: \n`, giphy)
+
+            giphy.data.forEach(dataObj => {
+                imgUrl.push(dataObj.images.fixed_height.url)
+            })
+        } catch (error) {
+            console.error('Error: ', error)
+        }
         
-        giphy.data.forEach(dataObj => {
-            imgUrl.push(dataObj.images.fixed_height.url)
-        });
+
+        
 
         console.info(`The list of url:\n`, imgUrl)
 
         resp.status(200)
-        resp.end()
+        resp.render('result', {search, imgUrl})
+        // resp.end()
+        
 })
 
 
